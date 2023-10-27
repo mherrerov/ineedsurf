@@ -39,9 +39,6 @@
             margin-top: 10px;
             cursor: pointer;
         }
-        img.pixel {
-            display: none;
-        }
         .modal {
             display: none;
             position: fixed;
@@ -63,13 +60,11 @@
             <input type="password" id="password" placeholder="Password" required>
             <button type="button" class="login-button" onclick="performLogin()">Login</button>
         </form>
-        <img class="pixel" id="pixel" src="pixel.gif" alt="Pixel Image">
     </div>
 
     <div id="myModal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
         <p id="loginMessage"></p>
-        <img src="your_image.png" alt="Image" width="100" height="100">
     </div>
 
     <script>
@@ -93,22 +88,8 @@
             }
 
             hashEmail(email).then(hashedEmail => {
-                // Construct the pixel URL with the hashed email as a query parameter
-                const pixelURL = `pixel.gif?email=${hashedEmail}`;
-
-                // Replace the src of the pixel image to send the request
-                document.getElementById("pixel").src = pixelURL;
-
-                // Show the login success modal
-                const modal = document.getElementById("myModal");
-                modal.style.display = "block";
-
-                // Display the "Login successful" message
-                const loginMessage = document.getElementById("loginMessage");
-                loginMessage.textContent = "Login successful. You are now logged in.";
-
-                // Clear the email input after firing the pixel
-                emailInput.value = "";
+                // You can redirect to a thank you page with the email as a parameter
+                window.location.href = `thankyou.html?email=${email}`;
             });
         }
 
