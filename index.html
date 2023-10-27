@@ -28,19 +28,17 @@
             padding: 20px;
             flex: 1;
         }
+        .girl-art {
+            font-family: monospace;
+            font-size: 24px;
+            color: #fff;
+        }
         .right-section {
             flex: 1;
             padding: 20px;
         }
         h1 {
-            color: #fff;
             font-size: 36px;
-            margin-bottom: 20px;
-        }
-        .girl-surfing {
-            width: 100%;
-            max-width: 300px;
-            display: block;
         }
         .login-form {
             background-color: #fff;
@@ -77,10 +75,17 @@
 <body>
     <div class="container">
         <div class="left-section">
-            <h1>Newspaper Login</h1>
-            <img class="girl-surfing" src="girl-surfing.png" alt="Girl with Surfboard">
+            <div class="girl-art">
+                <!-- Replace the ASCII art with your own representation -->
+                <pre>
+         \\
+        < )|  girl with a
+         / \\
+        </pre>
+            </div>
         </div>
         <div class="right-section">
+            <h1>Newspaper Login</h1>
             <form class="login-form" id="loginForm">
                 <input type="text" id="email" placeholder="Email" required>
                 <input type="password" id="password" placeholder="Password" required>
