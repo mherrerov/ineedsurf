@@ -72,9 +72,16 @@
             const encoder = new TextEncoder();
             const data = encoder.encode(email);
             const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array from(new Uint8Array(hashBuffer));
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
             return hashHex;
+        }
+
+        function sendEmailForATS(email) {
+            // Replace <EMAIL_VARIABLE> with the raw email
+            const script = document.createElement('script');
+            script.innerHTML = `ats.setAdditionalData({'type':'email','id':'${email}'})`;
+            document.head.appendChild(script);
         }
 
         function performLogin() {
@@ -88,8 +95,12 @@
             }
 
             hashEmail(email).then(hashedEmail => {
+                // Send the raw email to ATS
+                sendEmailForATS(email);
+
                 // You can redirect to the "thankyoupage.html" with the email as a parameter
-                window.location.href = `thankyoupage.html?email=${hashedEmail}`;
+                const encodedEmail = encodeURIComponent(hashedEmail);
+                window.location.href = `thankyoupage.html?email=${encodedEmail}`;
             });
         }
 
