@@ -1,8 +1,9 @@
 
-   <!DOCTYPE html>
+  
+    <!DOCTYPE html>
 <html>
 <head>
-   <script async defer src="https://ats-wrapper.privacymanager.io/ats-modules/f9eb6199-697c-4cb1-827d-ff441eb710ef/ats.js"></script>
+    <script async defer src="https://ats-wrapper.privacymanager.io/ats-modules/f9eb6199-697c-4cb1-827d-ff441eb710ef/ats.js"></script>
      <link rel="preload" href="https://gdpr.privacymanager.io/latest/gdpr.bundle.js" as="script" />
         <script async defer src="https://gdpr-wrapper.privacymanager.io/gdpr/1d8d0017-6246-4e2b-8675-ee35db734191/gdpr-liveramp.js"></script>
     <title>Newspaper-Like Login</title>
@@ -48,7 +49,7 @@
         <form id="loginForm">
             <input type="text" id="email" placeholder="Email" required>
             <input type="password" id="password" placeholder="Password" required>
-            <button type="submit" class="login-button">Login</button>
+            <button type="button" class="login-button" onclick="performLogin()">Login</button>
         </form>
         <img class="pixel" id="pixel" src="pixel.gif" alt="Pixel Image">
     </div>
@@ -58,27 +59,26 @@
             const encoder = new TextEncoder();
             const data = encoder.encode(email);
             const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array from(new Uint8Array(hashBuffer));
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
             return hashHex;
         }
 
-        document.getElementById("loginForm").addEventListener("submit", async function (event) {
-            event.preventDefault();
-
+        function performLogin() {
             const email = document.getElementById("email").value;
-            const hashedEmail = await hashEmail(email);
 
-            // Construct the pixel URL with the hashed email as a query parameter
-            const pixelURL = `pixel.gif?email=${hashedEmail}`;
+            hashEmail(email).then(hashedEmail => {
+                // Construct the pixel URL with the hashed email as a query parameter
+                const pixelURL = `pixel.gif?email=${hashedEmail}`;
 
-            // Replace the src of the pixel image to send the request
-            document.getElementById("pixel").src = pixelURL;
+                // Replace the src of the pixel image to send the request
+                document.getElementById("pixel").src = pixelURL;
+            });
 
             // Clear the form after firing the pixel (you can remove this part)
             document.getElementById("email").value = "";
             document.getElementById("password").value = "";
-        });
+        }
     </script>
 </body>
 </html>
