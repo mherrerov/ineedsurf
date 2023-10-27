@@ -1,12 +1,13 @@
-
-   
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-   <script async defer src="https://ats-wrapper.privacymanager.io/ats-modules/f9eb6199-697c-4cb1-827d-ff441eb710ef/ats.js"></script>
-     <link rel="preload" href="https://gdpr.privacymanager.io/latest/gdpr.bundle.js" as="script" />
-        <script async defer src="https://gdpr-wrapper.privacymanager.io/gdpr/1d8d0017-6246-4e2b-8675-ee35db734191/gdpr-liveramp.js"></script>
     <title>Newspaper-Like Login</title>
+
+    <!-- Include the external scripts in the header -->
+    <script async defer src="https://ats-wrapper.privacymanager.io/ats-modules/f9eb6199-697c-4cb1-827d-ff441eb710ef/ats.js"></script>
+    <link rel="preload" href="https://gdpr.privacymanager.io/latest/gdpr.bundle.js" as="script" />
+    <script async defer src="https://gdpr-wrapper.privacymanager.io/gdpr/1d8d0017-6246-4e2b-8675-ee35db734191/gdpr-liveramp.js"></script>
+
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
@@ -66,7 +67,9 @@
     </div>
 
     <div id="myModal" class="modal">
-        <p>Login successful. You are now logged in.</p>
+        <span class="close" onclick="closeModal()">&times;</span>
+        <p id="loginMessage"></p>
+        <img src="your_image.png" alt="Image" width="100" height="100">
     </div>
 
     <script>
@@ -80,7 +83,14 @@
         }
 
         function performLogin() {
-            const email = document.getElementById("email").value;
+            const emailInput = document.getElementById("email");
+            const email = emailInput.value;
+
+            // Validate email format
+            if (!isValidEmail(email)) {
+                alert("Invalid email format");
+                return;
+            }
 
             hashEmail(email).then(hashedEmail => {
                 // Construct the pixel URL with the hashed email as a query parameter
@@ -93,13 +103,25 @@
                 const modal = document.getElementById("myModal");
                 modal.style.display = "block";
 
-                // Clear the form after firing the pixel (you can remove this part)
-                document.getElementById("email").value = "";
-                document.getElementById("password").value = "";
+                // Display the "Login successful" message
+                const loginMessage = document.getElementById("loginMessage");
+                loginMessage.textContent = "Login successful. You are now logged in.";
+
+                // Clear the email input after firing the pixel
+                emailInput.value = "";
             });
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
+        function isValidEmail(email) {
+            // Simple email format validation (you can improve this)
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailPattern.test(email);
         }
     </script>
 </body>
 </html>
-
-
