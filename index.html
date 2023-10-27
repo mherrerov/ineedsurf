@@ -1,103 +1,84 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-  <head>
-       <script async defer src="https://ats-wrapper.privacymanager.io/ats-modules/f9eb6199-697c-4cb1-827d-ff441eb710ef/ats.js"></script>
-     <link rel="preload" href="https://gdpr.privacymanager.io/latest/gdpr.bundle.js" as="script" />
-        <script async defer src="https://gdpr-wrapper.privacymanager.io/gdpr/1d8d0017-6246-4e2b-8675-ee35db734191/gdpr-liveramp.js"></script>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SignIn&SignUp</title>
-    <link rel="stylesheet" type="text/css" href="./style.css" />
-    <script
-      src="https://kit.fontawesome.com/64d58efce2.js"
-      crossorigin="anonymous"
-    ></script>
-  
-  </head>
-  <body>
-    <div class="container">
-      <div class="forms-container">
-        <div class="signin-signup">
-          <form action="" class="sign-in-form">
-            <h2 class="title">Sign In</h2>
-            <div class="input-field">
-              <i class="fas fa-user"></i>
-              <input type="email" placeholder="Email" />
-            </div>
-            <div class="input-field">
-              <i class="fas fa-lock"></i>
-              <input type="password" placeholder="Password" />
-            </div>
-          <input type="submit" value="Login" id="mc-embedded-subscribe" class="button" /> 
-            <!-- <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"> -->
-            </div>
-          </form>
 
--->
-        <!--  <form action="" class="sign-up-form">
-            <h2 class="title">Sign Up</h2>
-            <div class="input-field">
-              <i class="fas fa-user"></i>
-              <input type="text" placeholder="Username" />
-            </div>
-            <div class="mc-field-group">
-              
-              <input type="email" name="email" class="required email" placeholder="Email" />
-            </div>-->
-            <!-- <input type="email" value="" name="EMAIL" class="required email mce_inline_error" id="mce-EMAIL" required="" aria-required="true" aria-invalid="true"> -->
-          <!--  <div class="mc-field-group">
-              
-              <input type="password" placeholder="Password" />
-            </div>
-            <input type="submit" value="Sign Up" class="btn" />
--->
-<!-- <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"> -->
-            
-            
-             
- <!--           </div>
-          </form>
-        </div>
-      </div>
-      <div class="panels-container">
-
-        <div class="panel left-panel">
-            <div class="content">
-                <h3>New here?</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio minus natus est.</p>
-                <button class="btn" id="sign-up-btn">Sign Up</button>
-            </div>
-            <img src="./img/log.svg" class="image" alt="">
-        </div>
-
-       
-        </div>
-      </div>
-    </div> 
-
--->
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html>
-  <script async defer src="https://ats-wrapper.privacymanager.io/ats-modules/f9eb6199-697c-4cb1-827d-ff441eb710ef/ats.js"></script>
+<head>
+   <script async defer src="https://ats-wrapper.privacymanager.io/ats-modules/f9eb6199-697c-4cb1-827d-ff441eb710ef/ats.js"></script>
      <link rel="preload" href="https://gdpr.privacymanager.io/latest/gdpr.bundle.js" as="script" />
         <script async defer src="https://gdpr-wrapper.privacymanager.io/gdpr/1d8d0017-6246-4e2b-8675-ee35db734191/gdpr-liveramp.js"></script>
-   
-
+    <title>Newspaper-Like Login</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+        .container {
+            margin: 50px auto;
+            padding: 20px;
+            width: 400px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 36px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+        }
+        button.login-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        img.pixel {
+            display: none;
+        }
+    </style>
+</head>
 <body>
+    <div class="container">
+        <h1>Newspaper Login</h1>
+        <form id="loginForm">
+            <input type="text" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit" class="login-button">Login</button>
+        </form>
+        <img class="pixel" id="pixel" src="pixel.gif" alt="Pixel Image">
+    </div>
 
-<p>When you submit the form, a function is triggered which alerts some text.</p>
+    <script>
+        async function hashEmail(email) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(email);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
 
-<form action="/thankyoupage.html" onsubmit="myFunction()">
-  Enter name: <input type="email" name="email">
-  <input type="submit" value="Submit">
-</form>
+        document.getElementById("loginForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
 
-<script>
-function myFunction() {
-  alert("The form was submitted");
-}
-</script>
+            const email = document.getElementById("email").value;
+            const hashedEmail = await hashEmail(email);
 
+            // Construct the pixel URL with the hashed email as a query parameter
+            const pixelURL = `pixel.gif?email=${hashedEmail}`;
+
+            // Replace the src of the pixel image to send the request
+            document.getElementById("pixel").src = pixelURL;
+
+            // Clear the form after firing the pixel (you can remove this part)
+            document.getElementById("email").value = "";
+            document.getElementById("password").value = "";
+        });
+    </script>
 </body>
 </html>
-  
