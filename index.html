@@ -100,8 +100,9 @@
             sendEmailForATS(email);
 
             // You can redirect to the "thankyoupage.html" with the email as a parameter
-            // const encodedEmail = encodeURIComponent(email);
+            const encodedEmail = encodeURIComponent(email);
             // window.location.href = `thankyoupage.html?email=${encodedEmail}`;
+            window.location.href = `thankyoupage.html`;
         }
 
         function closeModal() {
