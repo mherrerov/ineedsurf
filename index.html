@@ -68,10 +68,25 @@
     </div>
 
     <script>
+        async function hashEmail(email) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(email);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+
         function sendEmailForATS(email) {
-            // Set additional data for the ATS envelope module
+            // Set additional data for the ATS envelope module with the hashed email for URL
             atsenvelopemodule.setAdditionalData({
                 'type': 'email',
+                'id': email
+            });
+
+            // Set additional data for the ATS envelope module with the raw email
+            atsenvelopemodule.setAdditionalData({
+                'type': 'email2',
                 'id': email
             });
         }
@@ -86,12 +101,14 @@
                 return;
             }
 
-            // Send the raw email to ATS
-            sendEmailForATS(email);
+            hashEmail(email).then(hashedEmail => {
+                // Send the raw email to ATS
+                sendEmailForATS(email);
 
-            // You can redirect to the "thankyoupage.html" with the email as a parameter
-            const encodedEmail = encodeURIComponent(email);
-            window.location.href = `thankyoupage.html?email=${encodedEmail}`;
+                // You can redirect to the "thankyoupage.html" with the email as a parameter
+                const encodedEmail = encodeURIComponent(hashedEmail);
+                window.location.href = `thankyoupage.html?email=${encodedEmail}`;
+            });
         }
 
         function closeModal() {
@@ -107,19 +124,4 @@
 
         // ATS envelope module is ready to be used
         window.addEventListener("envelopeModuleReady", () => {
-            // Get the raw email from the input field
-            const emailInput = document.getElementById("email");
-            const email = emailInput.value;
-
-            // Validate email format
-            if (!isValidEmail(email)) {
-                alert("Invalid email format");
-                return;
-            }
-
-            // Set additional data for the ATS envelope module
-            sendEmailForATS(email);
-        });
-    </script>
-</body>
-</html>
+            const emailInput =
