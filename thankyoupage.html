@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thank You</title>
 
     <!-- Include the external scripts in the header, same as the login page -->
@@ -43,5 +45,39 @@
             <a href="javascript:history.back()">Go back to the login page</a>
         </p>
     </div>
+
+    <script>
+        // Function to retrieve cookie value by name
+        function getCookieValue(cookieName) {
+            const cookies = document.cookie.split(';');
+            for (const cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === cookieName) {
+                    return value;
+                }
+            }
+            return null;
+        }
+
+        // ATS envelope module is ready to be used
+        window.addEventListener("envelopeModuleReady", function () {
+            // Retrieve the hashed email from the cookie
+            const hashedEmail = getCookieValue("forenvelopecreation");
+
+            if (hashedEmail) {
+                // Set additional data for the ATS envelope module
+                atsenvelopemodule.setAdditionalData({
+                    'type': 'emailHashes',
+                    'id': [hashedEmail]
+                });
+
+                // Your additional ATS.setAdditionalData call
+                atsenvelopemodule.setAdditionalData({
+                    'id': 'email@liveramp.com',
+                    'type': 'email'
+                });
+            }
+        });
+    </script>
 </body>
 </html>
