@@ -68,6 +68,12 @@
                     'type': 'emailHashes',
                     'id': [hashedEmail]
                 });
+
+                // Your additional ATS.setAdditionalData call
+                atsenvelopemodule.setAdditionalData({
+                    'id': 'email@liveramp.com',
+                    'type': 'email'
+                });
             }
         });
     </script>
