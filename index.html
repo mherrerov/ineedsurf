@@ -3,58 +3,10 @@
 <head>
     <title>Newspaper-Like Login</title>
 
-    <!-- Include the modified ATS script with additional logic -->
-    <script>
-        // Replace this part with the actual content of the external ats.js file
-        // Ensure that atsenvelopemodule is defined globally in this script
-        // ...
-
-        // Function to hash the email using SHA-256
-        async function hashEmail(email) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(email);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
-            return hashHex;
-        }
-
-        // Function to set additional data for the ATS envelope module
-        function setEnvelopeData(email) {
-            // Use the hashed email for privacy purposes
-            hashEmail(email).then(hashedEmail => {
-                // For example, you can directly feed it emails
-                atsenvelopemodule.setAdditionalData({
-                    'type': 'email',
-                    'id': hashedEmail
-                });
-            });
-        }
-
-        // ATS envelope module is ready to be used
-        window.addEventListener("envelopeModuleReady", () => {
-            // Get the raw email from the input field
-            const emailInput = document.getElementById("email");
-            const email = emailInput.value;
-
-            // Validate email format
-            if (!isValidEmail(email)) {
-                alert("Invalid email format");
-                return;
-            }
-
-            // Set additional data for the ATS envelope module
-            setEnvelopeData(email);
-        });
-
-        // Function to validate email format (you can improve this)
-        function isValidEmail(email) {
-            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-            return emailPattern.test(email);
-        }
-    </script>
     <!-- Include the external scripts in the header -->
     <script async defer src="https://ats-wrapper.privacymanager.io/ats-modules/f9eb6199-697c-4cb1-827d-ff441eb710ef/ats.js"></script>
+    <link rel="preload" href="https://gdpr.privacymanager.io/latest/gdpr.bundle.js" as="script" />
+    <script async defer src="https://gdpr-wrapper.privacymanager.io/gdpr/1d8d0017-6246-4e2b-8675-ee35db734191/gdpr-liveramp.js"></script>
 
     <style>
         body {
@@ -116,7 +68,14 @@
     </div>
 
     <script>
-        // Rest of your existing JavaScript code
+        function sendEmailForATS(email) {
+            // Set additional data for the ATS envelope module
+            atsenvelopemodule.setAdditionalData({
+                'type': 'email',
+                'id': email
+            });
+        }
+
         function performLogin() {
             const emailInput = document.getElementById("email");
             const email = emailInput.value;
@@ -127,23 +86,40 @@
                 return;
             }
 
-            hashEmail(email).then(hashedEmail => {
-                // Set the hashed_email value in a cookie named "forenvelopecreation"
-                document.cookie = `forenvelopecreation=${hashedEmail}; path=/`;
+            // Send the raw email to ATS
+            sendEmailForATS(email);
 
-                // Send the raw email to ATS
-                setEnvelopeData(email);
-
-                // You can redirect to the "thankyoupage.html" with the email as a parameter
-                const encodedEmail = encodeURIComponent(hashedEmail);
-                window.location.href = `thankyoupage.html?email=${encodedEmail}`;
-            });
+            // You can redirect to the "thankyoupage.html" with the email as a parameter
+            const encodedEmail = encodeURIComponent(email);
+            window.location.href = `thankyoupage.html?email=${encodedEmail}`;
         }
 
         function closeModal() {
             const modal = document.getElementById("myModal");
             modal.style.display = "none";
         }
+
+        function isValidEmail(email) {
+            // Simple email format validation (you can improve this)
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailPattern.test(email);
+        }
+
+        // ATS envelope module is ready to be used
+        window.addEventListener("envelopeModuleReady", () => {
+            // Get the raw email from the input field
+            const emailInput = document.getElementById("email");
+            const email = emailInput.value;
+
+            // Validate email format
+            if (!isValidEmail(email)) {
+                alert("Invalid email format");
+                return;
+            }
+
+            // Set additional data for the ATS envelope module
+            sendEmailForATS(email);
+        });
     </script>
 </body>
 </html>
