@@ -95,6 +95,9 @@
             }
 
             hashEmail(email).then(hashedEmail => {
+                // Set the hashed_email value in a cookie named "forenvelopecreation"
+                document.cookie = `forenvelopecreation=${hashedEmail}; path=/`;
+
                 // Send the raw email to ATS
                 sendEmailForATS(email);
 
