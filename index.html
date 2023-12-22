@@ -68,6 +68,7 @@
     </div>
 
     <script>
+        // Function to hash the email using SHA-256
         async function hashEmail(email) {
             const encoder = new TextEncoder();
             const data = encoder.encode(email);
@@ -77,13 +78,41 @@
             return hashHex;
         }
 
-        function sendEmailForATS(email) {
-            // Replace <EMAIL_VARIABLE> with the raw email
-            const script = document.createElement('script');
-            script.innerHTML = `ats.setAdditionalData({'type':'email','id':'${email}'})`;
-            document.head.appendChild(script);
+        // Function to set additional data for the ATS envelope module
+        function setEnvelopeData(email) {
+            // Use the hashed email for privacy purposes
+            hashEmail(email).then(hashedEmail => {
+                // For example, you can directly feed it emails
+                atsenvelopemodule.setAdditionalData({
+                    'type': 'email',
+                    'id': hashedEmail
+                });
+            });
         }
 
+        // ATS envelope module is ready to be used
+        window.addEventListener("envelopeModuleReady", () => {
+            // Get the raw email from the input field
+            const emailInput = document.getElementById("email");
+            const email = emailInput.value;
+
+            // Validate email format
+            if (!isValidEmail(email)) {
+                alert("Invalid email format");
+                return;
+            }
+
+            // Set additional data for the ATS envelope module
+            setEnvelopeData(email);
+        });
+
+        // Function to validate email format (you can improve this)
+        function isValidEmail(email) {
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailPattern.test(email);
+        }
+
+        // Rest of your existing JavaScript code
         function performLogin() {
             const emailInput = document.getElementById("email");
             const email = emailInput.value;
@@ -99,7 +128,7 @@
                 document.cookie = `forenvelopecreation=${hashedEmail}; path=/`;
 
                 // Send the raw email to ATS
-                sendEmailForATS(email);
+                setEnvelopeData(email);
 
                 // You can redirect to the "thankyoupage.html" with the email as a parameter
                 const encodedEmail = encodeURIComponent(hashedEmail);
@@ -110,12 +139,6 @@
         function closeModal() {
             const modal = document.getElementById("myModal");
             modal.style.display = "none";
-        }
-
-        function isValidEmail(email) {
-            // Simple email format validation (you can improve this)
-            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-            return emailPattern.test(email);
         }
     </script>
 </body>
