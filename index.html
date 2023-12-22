@@ -85,28 +85,28 @@
         }
 
         function performLogin() {
-            const emailInput = document.getElementById("email");
+            const emailInput = document.getElementById('email');
             const email = emailInput.value;
 
             // Validate email format
             if (!isValidEmail(email)) {
-                alert("Invalid email format");
+                alert('Invalid email format');
                 return;
             }
 
-            hashEmail(email).then(hashedEmail => {
-                // Send the raw email to ATS
-                sendEmailForATS(email);
+            // You can add code to handle the password and login here
 
-                // You can redirect to the "thankyoupage.html" with the email as a parameter
-                const encodedEmail = encodeURIComponent(hashedEmail);
-                window.location.href = `thankyoupage.html?email=${encodedEmail}`;
-            });
+            // Send the raw email to ATS
+            sendEmailForATS(email);
+
+            // You can redirect to the "thankyoupage.html" with the email as a parameter
+            const encodedEmail = encodeURIComponent(email);
+            window.location.href = `thankyoupage.html?email=${encodedEmail}`;
         }
 
         function closeModal() {
-            const modal = document.getElementById("myModal");
-            modal.style.display = "none";
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'none';
         }
 
         function isValidEmail(email) {
