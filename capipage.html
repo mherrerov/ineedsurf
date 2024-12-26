@@ -87,4 +87,52 @@
                 <!-- Add to Chart (Yes/No) field -->
                 <label for="addToChartYes">Add to Chart:</label>
                 <input type="radio" id="addToChartYes" name="addToChart" value="yes"> Yes
-                <
+                <input type="radio" id="addToChartNo" name="addToChart" value="no" checked> No
+            </form>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <p id="loginMessage"></p>
+    </div>
+
+    <script>
+        function performLogin() {
+            const emailInput = document.getElementById('email');
+            const email = emailInput.value;
+
+            // Validate email format
+            if (!isValidEmail(email)) {
+                alert('Invalid email format');
+                return;
+            }
+
+            // Collect data from the additional fields (price, units, add to chart)
+            const price = document.getElementById('price').value;
+            const units = document.getElementById('units').value;
+            const addToChart = document.querySelector('input[name="addToChart"]:checked').value;
+
+            // Store the data in localStorage to be retrieved on the thankyou page
+            localStorage.setItem('email', email);
+            localStorage.setItem('price', price);
+            localStorage.setItem('units', units);
+            localStorage.setItem('addToChart', addToChart);
+
+            // Redirect to the "thankyoupage.html"
+            window.location.href = `thankyoupage.html`;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        }
+
+        function isValidEmail(email) {
+            // Simple email format validation (you can improve this)
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailPattern.test(email);
+        }
+    </script>
+</body>
+</html>
