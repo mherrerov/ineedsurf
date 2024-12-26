@@ -1,1 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newspaper-Like Login Page</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Login Page</h1>
+        <form onsubmit="performLogin(); return false;">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <button type="submit">Login</button>
+        </form>
+    </div>
 
+    <div>
+        <h2>Information Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Additional Information</th>
+                </tr>
+            </thead>
+            <tbody id="infoTableBody">
+                <!-- Rows will be added here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function hashEmail(email) {
+            const msgUint8 = new TextEncoder().encode(email);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+
+        function sendEmailForATS(email) {
+            const script = document.createElement('script');
+            script.innerHTML = `ats.setAdditionalData({'type':'email','id':'${email}'})`;
+            document.head.appendChild(script);
+        }
+
+        function addToCartEvent() {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                event: 'add_to_cart',
+                currency: 'USD',
+                value: 100.00,
+                items: [{
+                    item_id: '12345',
+                    item_name: 'Newspaper Subscription',
+                    price: 100.00,
+                    quantity: 1
+                }]
+            });
+        }
+
+        function purchaseEvent() {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                event: 'purchase',
+                transaction_id: 'T12345',
+                affiliation: 'Online Store',
+                value: 100.00,
+                currency: 'USD',
+                tax: 0,
+                shipping: 0,
+                items: [{
+                    item_id: '12345',
+                    item_name: 'Newspaper Subscription',
+                    price: 100.00,
+                    quantity: 1
+                }]
+            });
+        }
+
+        function performLogin() {
+            const emailInput = document.getElementById('email');
+            const email = emailInput.value;
+
+            // Validate email format
+            if (!isValidEmail(email)) {
+                alert('Invalid email format');
+                return;
+            }
+
+            // You can add code to handle the password and login here
+
+            // Send the raw email to ATS
+            sendEmailForATS(email);
+
+            // Trigger Add to Cart event
+            addToCartEvent();
+
+            // Trigger Purchase event
+            purchaseEvent();
+
+            // Add email to the information table
+            addEmailToTable(email);
+
+            // You can redirect to the "thankyoupage.html" with the email as a parameter
+            const encodedEmail = encodeURIComponent(email);
+            window.location.href = `thankyoupage.html?email=${encodedEmail}`;
+        }
+
+        function addEmailToTable(email) {
+            const tableBody = document.getElementById('infoTableBody');
+            const newRow = document.createElement('tr');
+            const emailCell = document.createElement('td');
+            const infoCell = document.createElement('td');
+
+            emailCell.textContent = email;
+            infoCell.textContent = 'Additional information here'; // Replace with actual information
+
+            newRow.appendChild(emailCell);
+            newRow.appendChild(infoCell);
+            tableBody.appendChild(newRow);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        }
+
+        function isValidEmail(email) {
+            // Simple email format validation (you can improve this)
+            const emailPattern = /^[a
