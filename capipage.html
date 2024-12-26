@@ -31,7 +31,7 @@
         .form-column h1 {
             font-size: 36px;
         }
-        input {
+        input, select {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -78,8 +78,18 @@
         <div class="form-column">
             <h1>Additional Information</h1>
             <form id="additionalInfoForm">
-                <!-- Price field -->
-                <input type="number" id="price" placeholder="Price (Currency)" required>
+                <!-- Random Event ID (hidden from user) -->
+                <input type="hidden" id="eventId">
+
+                <!-- Currency selection -->
+                <label for="currency">Currency:</label>
+                <select id="currency">
+                    <option value="€">€</option>
+                    <option value="$">$</option>
+                </select>
+
+                <!-- Value field (formerly "Price") -->
+                <input type="number" id="value" placeholder="Value" required>
 
                 <!-- Units field -->
                 <input type="number" id="units" placeholder="Units" required>
@@ -88,6 +98,9 @@
                 <label for="addToChartYes">Add to Chart:</label>
                 <input type="radio" id="addToChartYes" name="addToChart" value="yes"> Yes
                 <input type="radio" id="addToChartNo" name="addToChart" value="no" checked> No
+
+                <!-- City field -->
+                <input type="text" id="city" placeholder="City" required>
             </form>
         </div>
     </div>
@@ -98,6 +111,11 @@
     </div>
 
     <script>
+        function generateEventId() {
+            // Generate a random number for the Event ID (you can customize the range)
+            return Math.floor(Math.random() * 1000000000);
+        }
+
         function performLogin() {
             const emailInput = document.getElementById('email');
             const email = emailInput.value;
@@ -108,16 +126,22 @@
                 return;
             }
 
-            // Collect data from the additional fields (price, units, add to chart)
-            const price = document.getElementById('price').value;
+            // Collect data from the additional fields (eventId, currency, value, units, add to chart, city)
+            const eventId = generateEventId(); // Generate a random event ID
+            const currency = document.getElementById('currency').value;
+            const value = document.getElementById('value').value;
             const units = document.getElementById('units').value;
             const addToChart = document.querySelector('input[name="addToChart"]:checked').value;
+            const city = document.getElementById('city').value;
 
             // Store the data in localStorage to be retrieved on the thankyou page
+            localStorage.setItem('eventId', eventId);
             localStorage.setItem('email', email);
-            localStorage.setItem('price', price);
+            localStorage.setItem('currency', currency);
+            localStorage.setItem('value', value);
             localStorage.setItem('units', units);
             localStorage.setItem('addToChart', addToChart);
+            localStorage.setItem('city', city);
 
             // Redirect to the "thankyoupage.html"
             window.location.href = `thankyoupage.html`;
