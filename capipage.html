@@ -15,14 +15,20 @@
             text-align: center;
         }
         .container {
+            display: flex; /* Flexbox for side-by-side columns */
+            justify-content: center;
             margin: 50px auto;
             padding: 20px;
-            width: 400px;
+            width: 800px; /* Increased width for 2 columns */
             background-color: #fff;
             border: 1px solid #ccc;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        h1 {
+        .form-column {
+            flex: 1;
+            padding: 20px;
+        }
+        .form-column h1 {
             font-size: 36px;
         }
         input {
@@ -30,6 +36,10 @@
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
+        }
+        .form-column label {
+            display: block;
+            margin-top: 10px;
         }
         button.login-button {
             background-color: #4CAF50;
@@ -54,11 +64,47 @@
 </head>
 <body>
     <div class="container">
-        <h1>Newspaper Login</h1>
-        <form id="loginForm">
-            <input type="text" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            
-            <!-- New Fields -->
-            <input type="number" id="price" placeholder="Price (Currency)" required>
-            <input type="number" id="units" placeholder="Units" requi
+        <!-- Original Form Column -->
+        <div class="form-column">
+            <h1>Newspaper Login</h1>
+            <form id="loginForm">
+                <input type="text" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="button" class="login-button" onclick="performLogin()">Login</button>
+            </form>
+        </div>
+
+        <!-- New Fields Column -->
+        <div class="form-column">
+            <h1>Additional Information</h1>
+            <form id="additionalInfoForm">
+                <!-- Price field -->
+                <input type="number" id="price" placeholder="Price (Currency)" required>
+
+                <!-- Units field -->
+                <input type="number" id="units" placeholder="Units" required>
+
+                <!-- Add to Chart (Yes/No) field -->
+                <label for="addToChartYes">Add to Chart:</label>
+                <input type="radio" id="addToChartYes" name="addToChart" value="yes"> Yes
+                <input type="radio" id="addToChartNo" name="addToChart" value="no" checked> No
+            </form>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <p id="loginMessage"></p>
+    </div>
+
+    <script>
+        async function hashEmail(email) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(email);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+
+        functi
