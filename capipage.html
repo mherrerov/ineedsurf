@@ -94,17 +94,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h1>Conversion Information</h1>
             <form id="additionalInfoForm">
                 <!-- Random Event ID (hidden from user) -->
-                <input type="hidden" id="eventId">
+                <input type="hidden" id="Event Id">
 
                 <!-- Currency selection -->
-                <label for="currency">Currency:</label>
-                <select id="currency">
+                <label for="currency">Currency</label>
+                <select id="Currency">
                     <option value="€">€</option>
                     <option value="$">$</option>
                 </select>
 
                 <!-- Value field (formerly "Price") -->
-                <input type="number" id="value" placeholder="Value" required>
+                <input type="number" id="Value" placeholder="Value" required>
 
                 <!-- Units field -->
                 <input type="number" id="units" placeholder="Units" required>
@@ -115,7 +115,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <input type="radio" id="addToChartNo" name="addToChart" value="no" checked> No
 
                 <!-- City field -->
-                <input type="text" id="city" placeholder="City" required>
+                <input type="text" id="City" placeholder="City" required>
             </form>
         </div>
     </div>
@@ -159,20 +159,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
             // Collect data from the additional fields (eventId, currency, value, units, add to chart, city)
             const eventId = generateEventId(); // Generate a random event ID
-            const currency = document.getElementById('currency').value;
-            const value = document.getElementById('value').value;
+            const currency = document.getElementById('Currency').value;
+            const value = document.getElementById('Value').value;
             const units = document.getElementById('units').value;
             const addToChart = document.querySelector('input[name="addToChart"]:checked').value;
-            const city = document.getElementById('city').value;
+            const city = document.getElementById('City').value;
 
             // Store the data in localStorage to be retrieved on the thankyou page
-            localStorage.setItem('eventId', eventId);
+            localStorage.setItem('Event Id', Event Id);
             localStorage.setItem('email', email);
             localStorage.setItem('currency', currency);
-            localStorage.setItem('value', value);
+            localStorage.setItem('Value', Value);
             localStorage.setItem('units', units);
             localStorage.setItem('addToChart', addToChart);
-            localStorage.setItem('city', city);
+            localStorage.setItem('City', City);
 
             // Push data to the dataLayer
             window.dataLayer = window.dataLayer || [];
