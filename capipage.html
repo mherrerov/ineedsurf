@@ -76,7 +76,7 @@
 
         <!-- New Fields Column -->
         <div class="form-column">
-            <h1>Additional Information</h1>
+            <h1>Conversion Information</h1>
             <form id="additionalInfoForm">
                 <!-- Random Event ID (hidden from user) -->
                 <input type="hidden" id="eventId">
@@ -115,7 +115,21 @@
             // Generate a random number for the Event ID (you can customize the range)
             return Math.floor(Math.random() * 1000000000);
         }
+async function hashEmail(email) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(email);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
 
+        function sendEmailForATS(email) {
+            // Replace <EMAIL_VARIABLE> with the raw email
+            const script = document.createElement('script');
+            script.innerHTML = `ats.setAdditionalData({'type':'email','id':'${email}'})`;
+            document.head.appendChild(script);
+        }
         function performLogin() {
             const emailInput = document.getElementById('email');
             const email = emailInput.value;
@@ -146,7 +160,16 @@
             // Redirect to the "thankyoupage.html"
             window.location.href = `thankyoupage.html`;
         }
+  // You can add code to handle the password and login here
 
+            // Send the raw email to ATS
+            sendEmailForATS(email);
+
+            // You can redirect to the "thankyoupage.html" with the email as a parameter
+            const encodedEmail = encodeURIComponent(email);
+            // window.location.href = `thankyoupage.html?email=${encodedEmail}`;
+            window.location.href = `thankyoupage.html`;
+        }
         function closeModal() {
             const modal = document.getElementById('myModal');
             modal.style.display = 'none';
