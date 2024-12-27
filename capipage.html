@@ -115,7 +115,8 @@
             // Generate a random number for the Event ID (you can customize the range)
             return Math.floor(Math.random() * 1000000000);
         }
-async function hashEmail(email) {
+
+        async function hashEmail(email) {
             const encoder = new TextEncoder();
             const data = encoder.encode(email);
             const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -130,6 +131,7 @@ async function hashEmail(email) {
             script.innerHTML = `ats.setAdditionalData({'type':'email','id':'${email}'})`;
             document.head.appendChild(script);
         }
+
         function performLogin() {
             const emailInput = document.getElementById('email');
             const email = emailInput.value;
@@ -157,19 +159,26 @@ async function hashEmail(email) {
             localStorage.setItem('addToChart', addToChart);
             localStorage.setItem('city', city);
 
-            // Redirect to the "thankyoupage.html"
-            window.location.href = `thankyoupage.html`;
-        }
-  // You can add code to handle the password and login here
+            // Push data to the dataLayer
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'formSubmission',
+                'eventId': eventId,
+                'email': email,
+                'currency': currency,
+                'value': value,
+                'units': units,
+                'addToChart': addToChart,
+                'city': city
+            });
 
             // Send the raw email to ATS
             sendEmailForATS(email);
 
-            // You can redirect to the "thankyoupage.html" with the email as a parameter
-            const encodedEmail = encodeURIComponent(email);
-            // window.location.href = `thankyoupage.html?email=${encodedEmail}`;
+            // Redirect to the "thankyoupage.html"
             window.location.href = `thankyoupage.html`;
         }
+
         function closeModal() {
             const modal = document.getElementById('myModal');
             modal.style.display = 'none';
